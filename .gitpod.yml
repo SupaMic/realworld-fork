@@ -3,9 +3,11 @@ image:
 
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - name: phx
-    init: mix deps.get && mix compile # runs during prebuild
-    command: mix ecto.migrate && iex -S mix phx.server
+  - name: phx 
+    init: # runs during prebuild
+          mix local.hex --force && mix local.rebar --force && mix deps.get && mix compile
+          echo "CREATE USER postgres SUPERUSER; CREATE DATABASE postgres WITH OWNER postgres;" | psql     
+    command: mix ecto.create && mix ecto.migrate && iex -S mix phx.server
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
 ports:

@@ -4,9 +4,7 @@ image:
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
   - name: phx 
-    init: # runs during prebuild
-          mix local.hex --force && mix local.rebar --force && mix deps.get && mix compile
-          echo "CREATE USER postgres SUPERUSER; CREATE DATABASE postgres WITH OWNER postgres;" | psql     
+    init: bash .gitpod.init.sh && mix deps.get && mix compile && mix assets.deploy
     command: mix ecto.create && mix ecto.migrate && iex -S mix phx.server
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
@@ -18,6 +16,7 @@ ports:
 
 vscode:
   extensions:
-    - elixir-lsp.elixir-ls
-    - bradlc.vscode-tailwindcss
-    - victorbjorklund.phoenix
+    - bradlc.vscode-tailwindcss 
+    - elixir-lsp.elixir-ls 
+    - victorbjorklund.phoenix 
+    - benvp.vscode-hex-pm-intellisense 

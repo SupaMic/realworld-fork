@@ -4,8 +4,9 @@ image:
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 # --if-missing flag is only available for Elixir >= v1.13.0
 tasks:
-  - name: phx 
-    init: mix local.hex --if-missing --force && mix local.rebar --force --if-missing && bash .gitpod.elixir_init.sh && mix deps.get && mix compile
+  - name: phx
+    before: mix local.hex --if-missing --force && mix local.rebar --force --if-missing
+    init: bash .gitpod.elixir_init.sh && mix deps.get && mix compile
     command: mix ecto.create && mix ecto.migrate && iex -S mix phx.server
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/

@@ -12,7 +12,7 @@ if [[ -z "$user_exists" ]]; then
   echo "Creating postgres user to be compatible with default Elixir dev config..."
   
   # Create the user
-  psql -U gitpod -c "CREATE USER postgres SUPERUSER;"
+  psql -U gitpod -c "CREATE USER postgres SUPERUSER;ALTER USER postgres PASSWORD 'postgres';"
   psql -U gitpod -c "ALTER DATABASE postgres OWNER TO postgres;"
   psql -U gitpod -c "GRANT ALL PRIVILEGES ON DATABASE postgres TO gitpod;"
   echo "'postgres' user created successfully and made owner of 'postgres' db!"
@@ -20,9 +20,11 @@ else
   echo "'postgres' user already exists."
 fi;
 
+
+
 # force the install (--if-missing arg is >= Elixir v1.13)
-mix local.hex --if-missing
-mix local.rebar --if-missing
+mix local.hex --force --if-missing
+mix local.rebar --force --if-missing
 # mix local.hex --force
 # mix local.rebar
 

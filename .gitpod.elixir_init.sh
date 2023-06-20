@@ -2,9 +2,8 @@
 
 # These should be done in order and before mix deps.get and mix compile
 
-# Verify postgres database credentials because in some scenarios if the 
-# docker image starts `FROM gitpod/workspace-postgres`, then it sometimes 
-# seems to use `gitpod` as the default user and DB in Postgresql setup
+# Verify postgres database credentials because if docker image starts `FROM gitpod/workspace-postgres`, 
+# then it seems to use `gitpod` as the default owner on the postgres DB setup
 
 # Check if the user exists
 user_exists=$(psql -U gitpod -c "SELECT usename FROM pg_user WHERE usename='postgres';" -t)
@@ -21,18 +20,18 @@ else
   echo "'postgres' user already exists."
 fi;
 
-# force the install (--if-missing >= Elixir v1.13)
-# mix local.hex --if-missing
-# mix local.rebar --if-missing
-mix local.hex
-mix local.rebar
+# force the install (--if-missing arg is >= Elixir v1.13)
+mix local.hex --if-missing
+mix local.rebar --if-missing
+# mix local.hex --force
+# mix local.rebar
 
 # check if HEX installed via asdf, and if not install
-# Run mix hex.info, capture the output see if contains the expected information
+# Run mix hex.info to see if exists, $MIX_HOME is set in .gitpod.ElixirDockerfile
 
 echo "Checking Hex version in $MIX_HOME...";
 
-if echo $(mix hex.info) | grep -q "Hex: "; then
+if echo $(mix hex) | grep -q "Hex v2."; then
   echo "Hex package manager is already installed."
 else
   echo "Hex package manager is not installed. Installing...";
@@ -71,12 +70,12 @@ else
     echo "Failed to install Rebar3 package manager."
   fi
 fi
-
-# However, I'll be keeping this longer version in gist a resource for determining dynamically the Elixir version and internal path routes 
-# which might be useful for other deployment scenarios like umbrellas
+# --if-needed argument makes these install checks redundant however, dynamically determining the 
+# Elixir version asdf path routes might be useful for other deployment scenarios like umbrellas
 
 # This adds support for elixir-lsp.elixir-ls and victorbjorklund.phoenix extensions 
-# (in theory, but in practice the extensions themselves are unreliable in the vscode-remote IDE)
+# (in theory, but in practice the extensions themselves are somewhat unreliable in vscode-remote IDE)
+# so in short, this configuration and extension setup *needs work*
 json_file="/workspace/.vscode-remote/data/Machine/settings.json"
 # Read the JSON file and add the new key-value pair
 updated_json=$(jq '. + { "emmet.includeLanguages": { "phoenix-heex": "html", "html-eex": "html" } }' "$json_file")

@@ -7,20 +7,25 @@
 # seems to use `gitpod` as the default user and DB in Postgresql setup
 
 # Check if the user exists
-user_exists=$(psql -U gitpod -d postgres -c "SELECT usename FROM pg_user WHERE usename='postgres';" -t)
+user_exists=$(psql -U gitpod -c "SELECT usename FROM pg_user WHERE usename='postgres';" -t)
 
 if [[ -z "$user_exists" ]]; then
   echo "Creating postgres user to be compatible with default Elixir dev config..."
   
   # Create the user
-  echo "CREATE USER postgres SUPERUSER; ALTER DATABASE postgres OWNER TO postgres;" | psql
+  psql -U gitpod -c "CREATE USER postgres SUPERUSER;"
+  psql -U gitpod -c "ALTER DATABASE postgres OWNER TO postgres;"
+  psql -U gitpod -c "GRANT ALL PRIVILEGES ON DATABASE postgres TO gitpod;"
   echo "'postgres' user created successfully and made owner of 'postgres' db!"
 else
   echo "'postgres' user already exists."
 fi;
 
-# mix local.hex --force
-# mix local.rebar --force
+# force the install (--if-missing >= Elixir v1.13)
+# mix local.hex --if-missing
+# mix local.rebar --if-missing
+mix local.hex
+mix local.rebar
 
 # check if HEX installed via asdf, and if not install
 # Run mix hex.info, capture the output see if contains the expected information
@@ -67,15 +72,11 @@ else
   fi
 fi
 
-# This rebar section of the script could be replaced with the one-liner below if your Elixir version is 1.13 or greater
-# mix local.rebar --if-missing
-
 # However, I'll be keeping this longer version in gist a resource for determining dynamically the Elixir version and internal path routes 
-# which might be useful for other deployment scenarios, especially if you want to '--force' a update a minor version, 
-# then edit the line `"grep -q "rebar 3."` to the latest, ie change to `"grep -q "rebar 3.15"`
+# which might be useful for other deployment scenarios like umbrellas
 
-
-# This adds support for elixir-lsp.elixir-ls and victorbjorklund.phoenix extensions (in theory, but in practice the extensions themselves are unreliable)
+# This adds support for elixir-lsp.elixir-ls and victorbjorklund.phoenix extensions 
+# (in theory, but in practice the extensions themselves are unreliable in the vscode-remote IDE)
 json_file="/workspace/.vscode-remote/data/Machine/settings.json"
 # Read the JSON file and add the new key-value pair
 updated_json=$(jq '. + { "emmet.includeLanguages": { "phoenix-heex": "html", "html-eex": "html" } }' "$json_file")

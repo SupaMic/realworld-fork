@@ -21,6 +21,7 @@ else
   echo "'$DB_USER' user already exists."
 fi;
 
+
 echo "Checking Hex version...";
 # check if HEX installed via asdf, and if not install
 # Run mix hex.info, capture the output see if contains the expected information

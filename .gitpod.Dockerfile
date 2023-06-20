@@ -24,4 +24,6 @@ RUN asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git && \
     asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git && \
     asdf install erlang ${ERLANG_V} && \
     asdf install elixir ${ELIXIR_V}
-RUN echo -e "erlang ${ERLANG_V}\nelixir ${ELIXIR_V}" > ~/.tool-versions
+RUN asdf global erlang ${ERLANG_V} && \
+    asdf global elixir ${ELIXIR_V}
+# RUN echo -e "erlang ${ERLANG_V}\nelixir ${ELIXIR_V}" > ~/.tool-versions

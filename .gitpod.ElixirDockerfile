@@ -9,7 +9,7 @@ ENV KERL_BUILD_DOCS yes
 USER root
 # install dependencies here
 RUN apt-get clean && apt-get update && apt-get -y install --no-install-recommends \
-    build-essential inotify-tools jq xsltproc libncurses-dev automake autoconf xsltproc fop \
+    inotify-tools jq xsltproc libncurses-dev automake autoconf xsltproc fop \
     && rm -rf /var/lib/apt/lists/*
 
 USER gitpod
@@ -28,5 +28,3 @@ RUN asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git && \
 #     asdf global elixir ${ELIXIR_V}
 
 ENV MIX_HOME "$HOME/.asdf/installs/elixir/${ELIXIR_V}/.mix"
-# RUN mix local.hex --force && mix local.rebar --force
-# RUN echo -e "erlang ${ERLANG_V}\nelixir ${ELIXIR_V}" > ~/.tool-versions

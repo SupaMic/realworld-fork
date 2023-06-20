@@ -20,17 +20,8 @@ else
   echo "'postgres' user already exists."
 fi;
 
-
-
-# force the install (--if-missing arg is >= Elixir v1.13)
-mix local.hex --force --if-missing
-mix local.rebar --force --if-missing
-# mix local.hex --force
-# mix local.rebar
-
-# check if HEX installed via asdf, and if not install
-# Run mix hex.info to see if exists, $MIX_HOME is set in .gitpod.ElixirDockerfile
-
+# check if HEX v2.x.x installed via asdf, and if not install
+# Run mix hex to see if exists, $MIX_HOME is set in .gitpod.ElixirDockerfile
 echo "Checking Hex version in $MIX_HOME...";
 
 if echo $(mix hex) | grep -q "Hex v2."; then
@@ -72,8 +63,8 @@ else
     echo "Failed to install Rebar3 package manager."
   fi
 fi
-# --if-needed argument makes these install checks redundant however, dynamically determining the 
-# Elixir version asdf path routes might be useful for other deployment scenarios like umbrellas
+# the .gitpod.yml uses --if-missing flags for mix local.hex & mix local.rebar and makes these install checks redundant however, 
+# dynamically determining the Elixir version asdf path routes might be useful for other deployment scenarios like umbrellas
 
 # This adds support for elixir-lsp.elixir-ls and victorbjorklund.phoenix extensions 
 # (in theory, but in practice the extensions themselves are somewhat unreliable in vscode-remote IDE)

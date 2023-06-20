@@ -24,6 +24,9 @@ RUN asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git && \
     asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git && \
     asdf install erlang ${ERLANG_V} && \
     asdf install elixir ${ELIXIR_V}
-RUN asdf global erlang ${ERLANG_V} && \
-    asdf global elixir ${ELIXIR_V}
+# RUN asdf global erlang ${ERLANG_V} && \
+#     asdf global elixir ${ELIXIR_V}
+
+ENV MIX_HOME "$HOME/.asdf/installs/elixir/${ELIXIR_V}/.mix"
+RUN mix local.hex --force && mix local.rebar --force
 # RUN echo -e "erlang ${ERLANG_V}\nelixir ${ELIXIR_V}" > ~/.tool-versions

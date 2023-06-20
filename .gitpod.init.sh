@@ -21,50 +21,53 @@ else
   echo "'$DB_USER' user already exists."
 fi;
 
+mix local.hex --force
+mix local.rebar --force
 
-echo "Checking Hex version...";
-# check if HEX installed via asdf, and if not install
-# Run mix hex.info, capture the output see if contains the expected information
+# # check if HEX installed via asdf, and if not install
+# # Run mix hex.info, capture the output see if contains the expected information
 
-if echo $(mix hex.info) | grep -q "Hex: "; then
-  echo "Hex package manager is already installed."
-else
-  echo "Hex package manager is not installed. Installing...";
-  mix local.hex --force;
+# echo "Checking Hex version in $MIX_HOME...";
 
-  if [ $? -eq 0 ]; then
-    echo "Hex package manager installed successfully."
-  else
-    echo "Failed to install Hex package manager."
-  fi;
-fi;
+# if echo $(mix hex.info) | grep -q "Hex: "; then
+#   echo "Hex package manager is already installed."
+# else
+#   echo "Hex package manager is not installed. Installing...";
+#   mix local.hex --force;
 
-# Determine is if Rebar3 was installed properly using asdf
-mix_path=$(asdf which mix)
-mix_directory=$(dirname "$mix_path")
-mix_directory=${mix_directory%/bin}  # Remove '/bin' from the end of the path
+#   if [ $? -eq 0 ]; then
+#     echo "Hex package manager installed successfully."
+#   else
+#     echo "Failed to install Hex package manager."
+#   fi;
+# fi;
 
-#Parsing to dermine the path of asdf install dir
-elixir_version=$(elixir --version | grep -oE "Elixir [0-9]+\.[0-9]+\.[0-9]+" | awk '{print $2}')
-major_version=$(echo "$elixir_version" | cut -d "." -f 1)
-minor_version=$(echo "$elixir_version" | cut -d "." -f 2)
-internal_mix_path="$mix_directory/.mix/elixir/$major_version-$minor_version"
+# # Determine is if Rebar3 was installed properly using asdf
+# mix_path=$(asdf which mix)
+# mix_directory=$(dirname "$mix_path")
+# mix_directory=${mix_directory%/bin}  # Remove '/bin' from the end of the path
 
-rebar_bin_path="$internal_mix_path/rebar3"
-rebar_info=$($rebar_bin_path -v)
+# #Parsing to dermine the path of asdf install dir
+# elixir_version=$(elixir --version | grep -oE "Elixir [0-9]+\.[0-9]+\.[0-9]+" | awk '{print $2}')
+# major_version=$(echo "$elixir_version" | cut -d "." -f 1)
+# minor_version=$(echo "$elixir_version" | cut -d "." -f 2)
+# internal_mix_path="$mix_directory/.mix/elixir/$major_version-$minor_version"
 
-if echo "$rebar_info" | grep -q "rebar 3."; then
-  echo "Rebar3 package manager is already installed."
-else
-  echo "Rebar3 package manager is not installed. Installing..."
-  mix local.rebar --force
+# rebar_bin_path="$internal_mix_path/rebar3"
+# rebar_info=$($rebar_bin_path -v)
 
-  if [ $? -eq 0 ]; then
-    echo "Rebar3 package manager installed successfully."
-  else
-    echo "Failed to install Rebar3 package manager."
-  fi
-fi
+# if echo "$rebar_info" | grep -q "rebar 3."; then
+#   echo "Rebar3 package manager is already installed."
+# else
+#   echo "Rebar3 package manager is not installed. Installing..."
+#   mix local.rebar --force
+
+#   if [ $? -eq 0 ]; then
+#     echo "Rebar3 package manager installed successfully."
+#   else
+#     echo "Failed to install Rebar3 package manager."
+#   fi
+# fi
 
 # This rebar section of the script could be replaced with the one-liner below if your Elixir version is 1.13 or greater
 # mix local.rebar --if-missing
